@@ -61,12 +61,12 @@ body {
 }
 .tab-btn {
   flex: 1;
-  padding: 8px 4px;
+  padding: 10px 6px;
   border: none;
   background: transparent;
   color: var(--text2);
   font-family: 'DM Sans', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   border-radius: 10px;
   cursor: pointer;
@@ -74,9 +74,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
-.tab-btn svg { width: 18px; height: 18px; }
+.tab-btn svg { width: 20px; height: 20px; }
 .tab-btn.active {
   background: var(--surface);
   color: var(--accent2);
@@ -440,126 +440,9 @@ body {
   text-align: center;
 }
 
-/* ───── POSITIONNEMENT PRIX ───── */
-.action-btn {
-  width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 12px;
-  background: var(--accent);
-  color: #fff;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .15s;
-}
-.action-btn:active { transform: scale(0.97); opacity: 0.85; }
-.action-btn:disabled { opacity: 0.5; pointer-events: none; }
-
-.px-spinner {
-  width: 32px; height: 32px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  margin: 0 auto;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.px-competitor {
-  background: var(--surface);
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.px-competitor.mine {
-  border: 2px solid var(--accent);
-  background: linear-gradient(135deg, var(--surface), rgba(59,130,246,0.06));
-}
-.px-comp-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-.px-comp-brand {
-  font-size: 11px;
-  color: var(--text2);
-  margin-top: 2px;
-}
-.px-comp-price {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 17px;
-  font-weight: 700;
-  text-align: right;
-}
-.px-comp-detail {
-  font-size: 10px;
-  color: var(--text2);
-  text-align: right;
-  margin-top: 2px;
-}
-.px-diff-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-
-.px-position-bar {
-  background: var(--surface);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-.px-bar-track {
-  height: 8px;
-  background: linear-gradient(90deg, var(--green), var(--orange), var(--red));
-  border-radius: 4px;
-  position: relative;
-  margin: 14px 0 8px;
-}
-.px-bar-marker {
-  position: absolute;
-  top: -6px;
-  width: 20px;
-  height: 20px;
-  background: var(--accent);
-  border: 3px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  transform: translateX(-50%);
-}
-.px-bar-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: var(--text2);
-}
-.px-summary-card {
-  background: var(--surface);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  text-align: center;
-}
-.px-summary-position {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.px-summary-detail {
-  font-size: 12px;
-  color: var(--text2);
-}
+/* ───── OPS SUB-PAGES ───── */
+.ops-sub { display: none; }
+.ops-sub.active { display: block; }
 
 ::-webkit-scrollbar { width: 0; }
 input[type="number"] { -moz-appearance: textfield; }
@@ -586,10 +469,6 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   <button class="tab-btn" onclick="switchTab('ops')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
     Opé. Co
-  </button>
-  <button class="tab-btn" onclick="switchTab('prix')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12"/><path d="M15 9.5c0-1.38-1.34-2.5-3-2.5s-3 1.12-3 2.5 1.34 2.5 3 2.5 3 1.12 3 2.5-1.34 2.5-3 2.5"/></svg>
-    Prix
   </button>
 </nav>
 
@@ -705,90 +584,123 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 <!-- ═══════ PAGE: OPÉRATIONS COMMERCIALES ═══════ -->
 <div id="page-ops" class="page">
   <div class="section-title">Opérations Commerciales</div>
-  <div class="section-subtitle">Marge globale par palier — produit vendu + cadeaux offerts</div>
 
-  <!-- PRODUIT VENDU -->
-  <div class="op-section-label">🏷️ Produit vendu</div>
-  <div class="op-product-card" style="border-left:3px solid var(--accent);">
-    <div class="field-group" style="margin-bottom:10px;">
-      <div class="field-label">Nom du produit</div>
-      <input type="text" class="field-input" id="opMainName" value="Produit principal" oninput="calcOps()" style="font-family:'DM Sans',sans-serif;font-size:14px;">
-    </div>
-    <div class="field-row">
-      <div class="field-group">
-        <div class="field-label">Prix achat HT (€)</div>
-        <input type="number" class="field-input" id="opMainBuy" placeholder="0.00" oninput="calcOps()" inputmode="decimal">
+  <!-- TYPE SELECTOR -->
+  <div class="toggle-row" id="opsTypeBar">
+    <button class="toggle-option active" onclick="switchOpsType('paliers')">📊 Paliers</button>
+    <button class="toggle-option" onclick="switchOpsType('bogo')">🎁 BOGO</button>
+  </div>
+
+  <!-- ══════ SUB-PAGE: PALIERS ══════ -->
+  <div id="ops-paliers" class="ops-sub active">
+    <div class="section-subtitle">Remises par palier + cadeaux offerts</div>
+
+    <div class="op-section-label">🏷️ Produit vendu</div>
+    <div class="op-product-card" style="border-left:3px solid var(--accent);">
+      <div class="field-group" style="margin-bottom:10px;">
+        <div class="field-label">Nom du produit</div>
+        <input type="text" class="field-input" id="opMainName" value="Produit principal" oninput="calcOps()" style="font-family:'DM Sans',sans-serif;font-size:14px;">
       </div>
-      <div class="field-group">
-        <div class="field-label">Prix vente HT (€)</div>
-        <input type="number" class="field-input" id="opMainSell" placeholder="0.00" oninput="calcOps()" inputmode="decimal">
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Prix achat HT (€)</div>
+          <input type="number" class="field-input" id="opMainBuy" placeholder="0.00" oninput="calcOps()" inputmode="decimal">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Prix vente HT (€)</div>
+          <input type="number" class="field-input" id="opMainSell" placeholder="0.00" oninput="calcOps()" inputmode="decimal">
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- PALIERS -->
-  <div class="op-section-label">📊 Paliers</div>
-  <div class="op-product-card">
-    <div class="field-label" style="margin-bottom:8px;">Quantités achetées</div>
-    <div class="field-row">
-      <div class="field-group"><div class="field-label" style="text-align:center;font-size:10px;">Palier 1</div><input type="number" class="field-input" id="tier1" value="3" oninput="renderDiscounts();renderGifts();calcOps()" inputmode="numeric" style="text-align:center"></div>
-      <div class="field-group"><div class="field-label" style="text-align:center;font-size:10px;">Palier 2</div><input type="number" class="field-input" id="tier2" value="6" oninput="renderDiscounts();renderGifts();calcOps()" inputmode="numeric" style="text-align:center"></div>
-      <div class="field-group"><div class="field-label" style="text-align:center;font-size:10px;">Palier 3</div><input type="number" class="field-input" id="tier3" value="12" oninput="renderDiscounts();renderGifts();calcOps()" inputmode="numeric" style="text-align:center"></div>
-      <div class="field-group"><div class="field-label" style="text-align:center;font-size:10px;">Palier 4</div><input type="number" class="field-input" id="tier4" value="24" oninput="renderDiscounts();renderGifts();calcOps()" inputmode="numeric" style="text-align:center"></div>
+    <div class="op-section-label">📊 Paliers</div>
+    <div class="op-product-card">
+      <div class="field-label" style="margin-bottom:8px;">Quantités achetées</div>
+      <div class="field-row">
+        <div class="field-group"><div class="field-label" style="text-align:center;font-size:10px;">Palier 1</div><input type="number" class="field-input" id="tier1" value="3" oninput="renderDiscounts();renderGifts();calcOps()" inputmode="numeric" style="text-align:center"></div>
+        <div class="field-group"><div class="field-label" style="text-align:center;font-size:10px;">Palier 2</div><input type="number" class="field-input" id="tier2" value="6" oninput="renderDiscounts();renderGifts();calcOps()" inputmode="numeric" style="text-align:center"></div>
+        <div class="field-group"><div class="field-label" style="text-align:center;font-size:10px;">Palier 3</div><input type="number" class="field-input" id="tier3" value="12" oninput="renderDiscounts();renderGifts();calcOps()" inputmode="numeric" style="text-align:center"></div>
+        <div class="field-group"><div class="field-label" style="text-align:center;font-size:10px;">Palier 4</div><input type="number" class="field-input" id="tier4" value="24" oninput="renderDiscounts();renderGifts();calcOps()" inputmode="numeric" style="text-align:center"></div>
+      </div>
+      <div class="field-label" style="margin-top:10px;margin-bottom:8px;">Réduction sur le prix de vente (%)</div>
+      <div id="opsDiscounts"></div>
     </div>
-    <div class="field-label" style="margin-top:10px;margin-bottom:8px;">Réduction sur le prix de vente (%)</div>
-    <div id="opsDiscounts"></div>
+
+    <div class="op-section-label">🎁 Produits offerts</div>
+    <div id="opsGifts"></div>
+    <button class="add-product-btn" onclick="addGift()">+ Ajouter un produit offert</button>
+
+    <div id="opsResults"></div>
   </div>
 
-  <!-- CADEAUX OFFERTS -->
-  <div class="op-section-label">🎁 Produits offerts</div>
-  <div id="opsGifts"></div>
-  <button class="add-product-btn" onclick="addGift()">+ Ajouter un produit offert</button>
+  <!-- ══════ SUB-PAGE: BOGO ══════ -->
+  <div id="ops-bogo" class="ops-sub">
+    <div class="section-subtitle">Buy X Get Y — Produits offerts à l'achat</div>
 
-  <!-- RÉSULTATS -->
-  <div id="opsResults"></div>
-</div>
-
-<!-- ═══════ PAGE: POSITIONNEMENT PRIX ═══════ -->
-<div id="page-prix" class="page">
-  <div class="section-title">Positionnement Prix</div>
-  <div class="section-subtitle">Comparez votre prix avec la concurrence pro</div>
-
-  <div class="efield" onclick="this.querySelector('input').focus()">
-    <span class="efield-label">Produit</span>
-    <input type="text" class="efield-input" id="pxProduct" placeholder="Poudre texturisante" style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;">
-  </div>
-
-  <div class="field-row" style="margin-bottom:10px;">
-    <div class="efield" style="flex:1" onclick="this.querySelector('input').focus()">
-      <span class="efield-label">Format</span>
-      <input type="text" class="efield-input" id="pxFormat" placeholder="10g" style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;">
+    <div class="op-section-label">🏷️ Produit acheté</div>
+    <div class="op-product-card" style="border-left:3px solid var(--accent);">
+      <div class="field-group" style="margin-bottom:10px;">
+        <div class="field-label">Nom du produit</div>
+        <input type="text" class="field-input" id="bogoMainName" value="Produit principal" oninput="calcBogo()" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Prix achat HT (€)</div>
+          <input type="number" class="field-input" id="bogoMainBuy" placeholder="0.00" oninput="calcBogo()" inputmode="decimal">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Prix vente HT (€)</div>
+          <input type="number" class="field-input" id="bogoMainSell" placeholder="0.00" oninput="calcBogo()" inputmode="decimal">
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="field-row" style="margin-bottom:10px;">
-    <div class="efield" style="flex:1" onclick="this.querySelector('input').focus()">
-      <span class="efield-label">Mon P.A. HT</span>
-      <input type="number" class="efield-input" id="pxBuy" placeholder="0.00" inputmode="decimal">
-      <span class="efield-unit">€</span>
+    <div class="op-section-label">🔢 Quantité achetée</div>
+    <div class="op-product-card">
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Le client achète</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input type="number" class="field-input" id="bogoBuyQty" value="3" oninput="calcBogo()" inputmode="numeric" style="text-align:center;flex:1;">
+            <span style="font-size:13px;color:var(--text2);white-space:nowrap;">unité(s)</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="efield" style="flex:1" onclick="this.querySelector('input').focus()">
-      <span class="efield-label">Mon P.V. HT</span>
-      <input type="number" class="efield-input" id="pxSell" placeholder="0.00" inputmode="decimal">
-      <span class="efield-unit">€</span>
+
+    <div class="op-section-label">🎁 Produit offert</div>
+    <div id="bogoGiftSection"></div>
+    <div class="op-product-card" style="border-left:3px solid var(--orange);">
+      <div class="field-group" style="margin-bottom:10px;">
+        <div class="field-label">Type de cadeau</div>
+        <div class="toggle-row" style="margin-bottom:0;">
+          <button class="toggle-option active" id="bogoSameBtn" onclick="setBogoGiftType('same')">Même produit</button>
+          <button class="toggle-option" id="bogoOtherBtn" onclick="setBogoGiftType('other')">Autre produit</button>
+        </div>
+      </div>
+
+      <div id="bogoOtherFields" style="display:none;">
+        <div class="field-group" style="margin-bottom:10px;">
+          <div class="field-label">Nom du cadeau</div>
+          <input type="text" class="field-input" id="bogoGiftName" value="Cadeau" oninput="calcBogo()" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+        </div>
+        <div class="field-group" style="margin-bottom:10px;">
+          <div class="field-label">Prix achat HT du cadeau (€)</div>
+          <input type="number" class="field-input" id="bogoGiftBuy" placeholder="0.00" oninput="calcBogo()" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Quantité offerte</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <input type="number" class="field-input" id="bogoFreeQty" value="1" oninput="calcBogo()" inputmode="numeric" style="text-align:center;flex:1;">
+          <span style="font-size:13px;color:var(--text2);white-space:nowrap;">offert(s)</span>
+        </div>
+      </div>
     </div>
+
+    <div id="bogoResults"></div>
   </div>
-
-  <button class="action-btn" id="pxSearchBtn" onclick="searchPrices()">
-    🔍 Rechercher les prix concurrents
-  </button>
-
-  <div id="pxLoading" style="display:none;text-align:center;padding:30px 0;">
-    <div class="px-spinner"></div>
-    <div style="margin-top:12px;color:var(--text2);font-size:13px;">Recherche des prix concurrents en cours...</div>
-  </div>
-
-  <div id="pxResults"></div>
 </div>
 
 <script>
@@ -797,7 +709,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 // ═══════════════════════════════
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    b.classList.toggle('active', ['calc','tva','margin','ops','prix'][i] === tab);
+    b.classList.toggle('active', ['calc','tva','margin','ops'][i] === tab);
   });
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
@@ -1205,284 +1117,158 @@ renderDiscounts();
 addGift();
 
 // ═══════════════════════════════
-// POSITIONNEMENT PRIX
+// OPS TYPE SWITCHING
 // ═══════════════════════════════
-async function searchPrices() {
-  const product = document.getElementById('pxProduct').value.trim();
-  const format = document.getElementById('pxFormat').value.trim();
-  const myBuy = parseFloat(document.getElementById('pxBuy').value) || 0;
-  const mySell = parseFloat(document.getElementById('pxSell').value) || 0;
-
-  if (!product) { alert('Veuillez saisir un nom de produit'); return; }
-  if (!format) { alert('Veuillez saisir un format (ex: 10g, 500ml)'); return; }
-
-  const btn = document.getElementById('pxSearchBtn');
-  const loading = document.getElementById('pxLoading');
-  const results = document.getElementById('pxResults');
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Recherche en cours...';
-  loading.style.display = 'block';
-  results.innerHTML = '';
-
-  try {
-    const systemPrompt = `Tu es un assistant spécialisé dans les prix des produits capillaires professionnels en France. Tu réponds UNIQUEMENT en JSON valide. Pas de markdown, pas de backticks, pas de texte avant ou après le JSON. Fais 2-3 recherches web maximum, ciblées et efficaces.`;
-
-    const userPrompt = `Recherche les prix de vente de "${product}" format "${format}" chez les distributeurs professionnels de coiffure en France.
-
-Fais une recherche web ciblée : "${product} ${format} prix professionnel coiffure" puis une seconde si nécessaire avec des marques spécifiques.
-
-Pour chaque produit trouvé, convertis en HT si le prix affiché est TTC (divise par 1.20).
-
-Réponds UNIQUEMENT avec ce JSON (rien d'autre avant ou après) :
-{"sources_count":0,"competitors":[{"brand":"Marque","product":"Nom produit","format":"format","price_ht":0.00,"source":"site"}],"market_summary":"Résumé"}`;
-
-    // Use AbortController for timeout (45 seconds)
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 45000);
-
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 4096,
-        system: systemPrompt,
-        tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
-        messages: [{ role: "user", content: userPrompt }]
-      })
-    });
-
-    clearTimeout(timeout);
-    const data = await response.json();
-
-    if (data.error) {
-      throw new Error(data.error.message || 'Erreur API');
-    }
-    
-    // Count web search tool uses for sources count
-    let webSearchCount = 0;
-    let textContent = '';
-
-    if (data.content && Array.isArray(data.content)) {
-      for (const block of data.content) {
-        if (block.type === "web_search_tool_result") webSearchCount++;
-        if (block.type === "text" && block.text) textContent += block.text + "\n";
-      }
-    }
-
-    if (!textContent.trim()) {
-      throw new Error('Aucune réponse textuelle reçue');
-    }
-
-    // Robust JSON parsing
-    let parsed = null;
-    const raw = textContent.trim();
-
-    // Strategy 1: direct parse
-    try { parsed = JSON.parse(raw); } catch(e) {}
-
-    // Strategy 2: strip markdown fences
-    if (!parsed) {
-      const stripped = raw.replace(/^```(?:json)?\s*/m, '').replace(/\s*```\s*$/m, '').trim();
-      try { parsed = JSON.parse(stripped); } catch(e) {}
-    }
-
-    // Strategy 3: extract first JSON object with balanced braces
-    if (!parsed) {
-      const start = raw.indexOf('{');
-      if (start !== -1) {
-        let depth = 0;
-        let end = -1;
-        for (let i = start; i < raw.length; i++) {
-          if (raw[i] === '{') depth++;
-          else if (raw[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
-        }
-        if (end !== -1) {
-          try { parsed = JSON.parse(raw.substring(start, end + 1)); } catch(e) {}
-        }
-      }
-    }
-
-    // Strategy 4: try to fix common JSON issues (trailing commas, etc.)
-    if (!parsed) {
-      const start = raw.indexOf('{');
-      if (start !== -1) {
-        let jsonStr = raw.substring(start);
-        // Remove trailing comma before } or ]
-        jsonStr = jsonStr.replace(/,\s*([}\]])/g, '$1');
-        // Try to close unclosed JSON
-        const opens = (jsonStr.match(/{/g) || []).length;
-        const closes = (jsonStr.match(/}/g) || []).length;
-        for (let i = 0; i < opens - closes; i++) jsonStr += '}';
-        const openBr = (jsonStr.match(/\[/g) || []).length;
-        const closeBr = (jsonStr.match(/\]/g) || []).length;
-        for (let i = 0; i < openBr - closeBr; i++) jsonStr += ']';
-        try { parsed = JSON.parse(jsonStr); } catch(e) {}
-      }
-    }
-
-    if (!parsed || !parsed.competitors) {
-      console.error('Raw response:', raw);
-      throw new Error('Format de réponse inattendu. Réessayez.');
-    }
-
-    // Filter out invalid entries
-    parsed.competitors = parsed.competitors.filter(c => 
-      c && c.brand && c.price_ht && typeof c.price_ht === 'number' && c.price_ht > 0
-    );
-
-    if (parsed.competitors.length === 0) {
-      throw new Error('Aucun prix concurrent trouvé. Essayez avec un terme plus générique.');
-    }
-
-    parsed._webSearchCount = webSearchCount || parsed.sources_count || 0;
-    renderPriceResults(parsed, mySell, myBuy);
-
-  } catch(err) {
-    console.error(err);
-    const isTimeout = err.name === 'AbortError';
-    results.innerHTML = `
-      <div style="text-align:center;padding:20px;color:var(--red);">
-        <div style="font-size:14px;font-weight:600;">${isTimeout ? '⏱️ Recherche trop longue' : 'Erreur lors de la recherche'}</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:6px;">${isTimeout ? 'Essayez avec un terme plus simple (ex: "poudre décolorante" au lieu de "poudre décolorante 9 tons")' : (err.message || 'Veuillez réessayer')}</div>
-      </div>`;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🔍 Rechercher les prix concurrents';
-    loading.style.display = 'none';
-  }
+function switchOpsType(type) {
+  const bar = document.getElementById('opsTypeBar');
+  bar.querySelectorAll('.toggle-option').forEach((b, i) => {
+    b.classList.toggle('active', ['paliers','bogo'][i] === type);
+  });
+  document.querySelectorAll('.ops-sub').forEach(s => s.classList.remove('active'));
+  document.getElementById('ops-' + type).classList.add('active');
 }
 
-function renderPriceResults(data, mySell, myBuy) {
-  const container = document.getElementById('pxResults');
-  const competitors = data.competitors || [];
-  
-  if (competitors.length === 0) {
-    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text2);">Aucun concurrent trouvé</div>';
+// ═══════════════════════════════
+// BOGO (Buy X Get Y)
+// ═══════════════════════════════
+let bogoGiftType = 'same'; // 'same' or 'other'
+
+function setBogoGiftType(type) {
+  bogoGiftType = type;
+  document.getElementById('bogoSameBtn').classList.toggle('active', type === 'same');
+  document.getElementById('bogoOtherBtn').classList.toggle('active', type === 'other');
+  document.getElementById('bogoOtherFields').style.display = type === 'other' ? 'block' : 'none';
+  calcBogo();
+}
+
+function calcBogo() {
+  const mainName = document.getElementById('bogoMainName').value || 'Produit';
+  const mainBuy = parseFloat(document.getElementById('bogoMainBuy').value) || 0;
+  const mainSell = parseFloat(document.getElementById('bogoMainSell').value) || 0;
+  const buyQty = parseInt(document.getElementById('bogoBuyQty').value) || 0;
+  const freeQty = parseInt(document.getElementById('bogoFreeQty').value) || 0;
+
+  if ((mainBuy === 0 && mainSell === 0) || buyQty === 0) {
+    document.getElementById('bogoResults').innerHTML = '';
     return;
   }
 
-  // Sort by price
-  competitors.sort((a, b) => a.price_ht - b.price_ht);
-
-  const prices = competitors.map(c => c.price_ht);
-  const minPrice = Math.min(...prices);
-  const maxPrice = Math.max(...prices);
-  const avgPrice = prices.reduce((a,b) => a+b, 0) / prices.length;
-
-  // Position of my price
-  let positionText = '';
-  let positionColor = '';
-  const range = maxPrice - minPrice;
-  let positionPct = 50;
-  
-  if (mySell > 0 && range > 0) {
-    positionPct = Math.max(0, Math.min(100, ((mySell - minPrice) / range) * 100));
-    if (mySell < avgPrice * 0.85) { positionText = '💰 Très compétitif'; positionColor = 'var(--green)'; }
-    else if (mySell < avgPrice) { positionText = '✅ Compétitif'; positionColor = 'var(--green)'; }
-    else if (mySell < avgPrice * 1.15) { positionText = '🎯 Dans la moyenne'; positionColor = 'var(--orange)'; }
-    else if (mySell < avgPrice * 1.3) { positionText = '📈 Premium'; positionColor = 'var(--orange)'; }
-    else { positionText = '👑 Haut de gamme'; positionColor = 'var(--red)'; }
+  // Gift details
+  let giftName, giftBuy;
+  if (bogoGiftType === 'same') {
+    giftName = mainName;
+    giftBuy = mainBuy;
+  } else {
+    giftName = document.getElementById('bogoGiftName').value || 'Cadeau';
+    giftBuy = parseFloat(document.getElementById('bogoGiftBuy').value) || 0;
   }
 
-  // My margin
-  const myMargin = mySell > 0 && myBuy > 0 ? ((mySell - myBuy) / mySell * 100) : 0;
+  // Calculs
+  const revenue = buyQty * mainSell;
+  const costBought = buyQty * mainBuy;
+  const costFree = freeQty * giftBuy;
+  const totalCost = costBought + costFree;
+  const margin = revenue - totalCost;
+  const marginPct = revenue > 0 ? (margin / revenue) * 100 : 0;
+  const mc = margin >= 0 ? 'green' : 'red';
 
-  let html = '';
+  // Compare with same sale without promo
+  const marginNoPromo = revenue - costBought;
+  const marginPctNoPromo = revenue > 0 ? (marginNoPromo / revenue) * 100 : 0;
+  const marginLoss = marginNoPromo - margin;
 
-  // Summary card
-  if (mySell > 0) {
-    html += `
-      <div class="px-summary-card" style="margin-top:14px;">
-        <div class="px-summary-position" style="color:${positionColor}">${positionText}</div>
-        <div class="px-summary-detail">
-          Votre prix : ${formatEur(mySell)} HT — Moyenne marché : ${formatEur(avgPrice)} HT
-          ${mySell < avgPrice ? '(' + Math.round((1 - mySell/avgPrice)*100) + '% sous la moyenne)' : 
-            mySell > avgPrice ? '(' + Math.round((mySell/avgPrice - 1)*100) + '% au-dessus)' : ''}
+  // Effective unit price (cost spread across sold + free)
+  const totalUnits = buyQty + freeQty;
+  const effectiveSellPrice = revenue / totalUnits;
+
+  const offerLabel = `${buyQty} acheté${buyQty > 1 ? 's' : ''} = ${freeQty} offert${freeQty > 1 ? 's' : ''}`;
+
+  let html = `
+    <div class="divider" style="margin-top:4px;">Résultat — ${offerLabel}</div>
+
+    <div class="tier-result-card">
+      <div class="tier-result-title">
+        🎁 ${offerLabel}
+      </div>
+      <div class="tier-grid">
+        <div class="tier-stat">
+          <div class="tier-stat-label">CA HT (${buyQty} × ${formatEur(mainSell)})</div>
+          <div class="tier-stat-value">${formatEur(revenue)}</div>
         </div>
-        ${myBuy > 0 ? `<div class="px-summary-detail" style="margin-top:4px;">Taux de marque : ${formatPct(myMargin)}</div>` : ''}
-      </div>`;
-  }
-
-  // Position bar
-  if (mySell > 0 && range > 0) {
-    html += `
-      <div class="px-position-bar">
-        <div style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;">Positionnement</div>
-        <div class="px-bar-track">
-          <div class="px-bar-marker" style="left:${positionPct}%"></div>
+        <div class="tier-stat">
+          <div class="tier-stat-label">Coût ${buyQty} achetés</div>
+          <div class="tier-stat-value">${formatEur(costBought)}</div>
         </div>
-        <div class="px-bar-labels">
-          <span>${formatEur(minPrice)}</span>
-          <span>Moy. ${formatEur(avgPrice)}</span>
-          <span>${formatEur(maxPrice)}</span>
+        <div class="tier-stat">
+          <div class="tier-stat-label">Coût ${freeQty} offert${freeQty > 1 ? 's' : ''}</div>
+          <div class="tier-stat-value" style="color:var(--orange)">${formatEur(costFree)}</div>
         </div>
-      </div>`;
-  }
-
-  // Divider with sources count
-  const sourcesCount = data._webSearchCount || 0;
-  html += '<div class="divider">Concurrents trouvés (' + competitors.length + ')' + (sourcesCount > 0 ? ' — ' + sourcesCount + ' sources analysées' : '') + '</div>';
-
-  // My product in the list
-  if (mySell > 0) {
-    // Find where my product fits
-    const myIdx = competitors.findIndex(c => c.price_ht > mySell);
-    const insertAt = myIdx === -1 ? competitors.length : myIdx;
-    competitors.splice(insertAt, 0, { 
-      brand: 'COIFFISSIMO', 
-      product: document.getElementById('pxProduct').value, 
-      format: document.getElementById('pxFormat').value,
-      price_ht: mySell, 
-      source: 'Mon prix',
-      _mine: true 
-    });
-  }
-
-  // Competitor cards
-  competitors.forEach(c => {
-    const isMine = c._mine;
-    // Calculate % difference vs my price
-    let diffHtml = '';
-    if (!isMine && mySell > 0) {
-      const diffPct = ((mySell - c.price_ht) / c.price_ht) * 100;
-      if (diffPct > 0.5) {
-        diffHtml = `<div class="px-diff-badge" style="background:var(--green-bg);color:var(--green);">-${Math.round(Math.abs(diffPct))}%</div>`;
-      } else if (diffPct < -0.5) {
-        diffHtml = `<div class="px-diff-badge" style="background:var(--red-bg);color:var(--red);">+${Math.round(Math.abs(diffPct))}%</div>`;
-      } else {
-        diffHtml = `<div class="px-diff-badge" style="background:var(--orange-bg);color:var(--orange);">≈</div>`;
-      }
-    }
-    html += `
-      <div class="px-competitor ${isMine ? 'mine' : ''}">
-        <div style="flex:1;min-width:0;">
-          <div class="px-comp-name">${isMine ? '⭐ ' : ''}${c.brand}</div>
-          <div class="px-comp-brand">${c.product} — ${c.format}</div>
-          ${!isMine ? `<div class="px-comp-brand">${c.source}</div>` : ''}
+        <div class="tier-stat">
+          <div class="tier-stat-label">Marge €</div>
+          <div class="tier-stat-value" style="color:var(--${mc})">${formatEur(margin)}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-          ${diffHtml}
-          <div>
-            <div class="px-comp-price" style="${isMine ? 'color:var(--accent2)' : ''}">${formatEur(c.price_ht)}</div>
-            <div class="px-comp-detail">HT</div>
-          </div>
+        <div class="tier-stat">
+          <div class="tier-stat-label">Taux de marque</div>
+          <div class="tier-stat-value" style="color:var(--${mc})">${formatPct(marginPct)}</div>
         </div>
-      </div>`;
-  });
+        <div class="tier-stat">
+          <div class="tier-stat-label">P.V. effectif / unité</div>
+          <div class="tier-stat-value">${formatEur(effectiveSellPrice)}</div>
+        </div>
+      </div>
 
-  // Market summary
-  if (data.market_summary) {
-    html += `
-      <div style="background:var(--surface);border-radius:12px;padding:14px;margin-top:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-        <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;margin-bottom:4px;">📊 Synthèse marché</div>
-        <div style="font-size:13px;color:var(--text);line-height:1.5;">${data.market_summary}</div>
-      </div>`;
-  }
+      <details style="margin-top:10px;">
+        <summary style="font-size:12px;color:var(--text2);cursor:pointer;padding:4px 0;">📋 Détail de l'opération</summary>
+        <table class="op-detail-table">
+          <thead><tr><th>Élément</th><th>Qté</th><th>P.U. HT</th><th>Total HT</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="font-family:'DM Sans',sans-serif;font-size:11px;">${mainName} (vente)</td>
+              <td>${buyQty}</td>
+              <td>${formatEur(mainSell)}</td>
+              <td>${formatEur(revenue)}</td>
+            </tr>
+            <tr>
+              <td style="font-family:'DM Sans',sans-serif;font-size:11px;">${mainName} (achat)</td>
+              <td>${buyQty}</td>
+              <td>${formatEur(mainBuy)}</td>
+              <td style="color:var(--red)">-${formatEur(costBought)}</td>
+            </tr>
+            <tr class="free">
+              <td style="font-family:'DM Sans',sans-serif;font-size:11px;">🎁 ${giftName}</td>
+              <td>${freeQty}</td>
+              <td>${formatEur(giftBuy)}</td>
+              <td style="color:var(--red)">-${formatEur(costFree)}</td>
+            </tr>
+            <tr style="border-top:2px solid var(--border);font-weight:700;">
+              <td style="font-family:'DM Sans',sans-serif;font-size:11px;" colspan="3">Marge nette</td>
+              <td style="color:var(--${mc})">${formatEur(margin)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+    </div>
 
-  container.innerHTML = html;
+    <!-- Comparaison sans promo -->
+    <div class="op-product-card" style="border-left:3px solid var(--text2);margin-top:10px;">
+      <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">📊 Comparaison sans promo</div>
+      <div class="field-row">
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text2);">Marge sans promo</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--green);">${formatPct(marginPctNoPromo)}</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text2);">Marge avec promo</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--${mc});">${formatPct(marginPct)}</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text2);">Coût de l'offre</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--red);">-${formatEur(marginLoss)}</div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('bogoResults').innerHTML = html;
 }
 </script>
 </body>
