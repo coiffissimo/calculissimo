@@ -161,6 +161,27 @@ body {
   margin-bottom: 16px;
   color: var(--text);
 }
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.section-header .section-title { margin-bottom: 0; }
+.reset-link {
+  font-size: 11px;
+  color: var(--text2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  padding: 5px 10px;
+  border-radius: 8px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.reset-link:active { background: var(--border); }
 .section-subtitle {
   font-size: 13px;
   color: var(--text2);
@@ -606,7 +627,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
 <!-- ═══════ PAGE: HT/TTC ═══════ -->
 <div id="page-tva" class="page">
-  <div class="section-title">Conversion HT ⇄ TTC</div>
+  <div class="section-header">
+    <div class="section-title">Conversion HT ⇄ TTC</div>
+    <button class="reset-link" onclick="resetTva()">↺ Réinitialiser</button>
+  </div>
   
   <div class="toggle-row" id="tvaRates">
     <button class="toggle-option" onclick="setTvaRate(5.5)">5,5%</button>
@@ -642,7 +666,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
 <!-- ═══════ PAGE: MARGE ═══════ -->
 <div id="page-margin" class="page">
-  <div class="section-title">Calcul de Marge</div>
+  <div class="section-header">
+    <div class="section-title">Calcul de Marge</div>
+    <button class="reset-link" onclick="resetMargin()">↺ Réinitialiser</button>
+  </div>
 
   <div class="efield" onclick="this.querySelector('input').focus()">
     <span class="efield-label">Prix d'achat HT</span>
@@ -689,14 +716,17 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
   <!-- TYPE SELECTOR -->
   <div class="toggle-row" id="opsTypeBar">
-    <button class="toggle-option active" onclick="switchOpsType('paliers')">📊 Paliers</button>
+    <button class="toggle-option active" onclick="switchOpsType('reduc')">💲 Réduc</button>
+    <button class="toggle-option" onclick="switchOpsType('paliers')">📊 Paliers</button>
     <button class="toggle-option" onclick="switchOpsType('bogo')">🎁 BOGO</button>
-    <button class="toggle-option" onclick="switchOpsType('reduc')">💲 Réduc</button>
   </div>
 
   <!-- ══════ SUB-PAGE: PALIERS ══════ -->
-  <div id="ops-paliers" class="ops-sub active">
-    <div class="section-subtitle">Remises par palier + cadeaux offerts</div>
+  <div id="ops-paliers" class="ops-sub">
+    <div class="section-header" style="margin-bottom:12px;margin-top:-4px;">
+      <div class="section-subtitle" style="margin:0;">Remises par palier + cadeaux offerts</div>
+      <button class="reset-link" onclick="resetPaliers()">↺ Réinitialiser</button>
+    </div>
 
     <div class="op-section-label">🏷️ Produit vendu</div>
     <div class="op-product-card" style="border-left:3px solid var(--accent);">
@@ -741,7 +771,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
   <!-- ══════ SUB-PAGE: BOGO ══════ -->
   <div id="ops-bogo" class="ops-sub">
-    <div class="section-subtitle">Buy X Get Y — Produits offerts à l'achat</div>
+    <div class="section-header" style="margin-bottom:12px;margin-top:-4px;">
+      <div class="section-subtitle" style="margin:0;">Buy X Get Y — Produits offerts à l'achat</div>
+      <button class="reset-link" onclick="resetBogo()">↺ Réinitialiser</button>
+    </div>
 
     <div class="op-section-label">🏷️ Produit acheté</div>
     <div class="op-product-card" style="border-left:3px solid var(--accent);">
@@ -815,8 +848,11 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   </div>
 
   <!-- ══════ SUB-PAGE: RÉDUCTION ══════ -->
-  <div id="ops-reduc" class="ops-sub">
-    <div class="section-subtitle">Réduction en % sur un produit</div>
+  <div id="ops-reduc" class="ops-sub active">
+    <div class="section-header" style="margin-bottom:12px;margin-top:-4px;">
+      <div class="section-subtitle" style="margin:0;">Réduction en % sur un produit</div>
+      <button class="reset-link" onclick="resetReduc()">↺ Réinitialiser</button>
+    </div>
 
     <div class="op-section-label">🏷️ Produit</div>
     <div class="op-product-card" style="border-left:3px solid var(--accent);">
@@ -1044,6 +1080,61 @@ function calcReduc() {
     </div>`;
 
   document.getElementById('reducResults').innerHTML = html;
+}
+
+// ═══════════════════════════════
+// RESET FUNCTIONS
+// ═══════════════════════════════
+function resetTva() {
+  ['tvaHt','tvaTva','tvaTtc','tvaCustomRate'].forEach(id => { document.getElementById(id).value = ''; });
+  document.querySelectorAll('#page-tva .efield-clear').forEach(b => b.style.display = 'none');
+}
+
+function resetMargin() {
+  ['mBuy','mSell','mMarginEur','mTauxMarge','mTauxMarque','mCoeff'].forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).style.color = ''; });
+  document.getElementById('fMarginEur').className = 'efield green-hl';
+  document.getElementById('fTauxMarque').style.background = '#F2E4E8';
+  document.querySelectorAll('#page-margin .efield-clear').forEach(b => b.style.display = 'none');
+}
+
+function resetPaliers() {
+  document.getElementById('opMainName').value = 'Produit principal';
+  document.getElementById('opMainBuy').value = '';
+  document.getElementById('opMainSell').value = '';
+  document.getElementById('tier1').value = '3';
+  document.getElementById('tier2').value = '6';
+  document.getElementById('tier3').value = '12';
+  document.getElementById('tier4').value = '24';
+  discounts = [0,0,0,0];
+  gifts = [];
+  giftIdCounter = 0;
+  renderDiscounts();
+  addGift();
+  document.getElementById('opsResults').innerHTML = '';
+  document.querySelectorAll('#ops-paliers .field-clear-btn').forEach(b => b.style.display = 'none');
+  document.querySelectorAll('#ops-paliers .field-input-wrap .field-clear-btn').forEach(b => { if (b.closest('.field-input-wrap').querySelector('input').value) b.style.display = 'block'; });
+}
+
+function resetBogo() {
+  document.getElementById('bogoMainName').value = 'Produit principal';
+  document.getElementById('bogoMainBuy').value = '';
+  document.getElementById('bogoMainSell').value = '';
+  document.getElementById('bogoBuyQty').value = '3';
+  document.getElementById('bogoFreeQty').value = '1';
+  document.getElementById('bogoGiftName').value = 'Cadeau';
+  document.getElementById('bogoGiftBuy').value = '';
+  setBogoGiftType('same');
+  document.getElementById('bogoResults').innerHTML = '';
+}
+
+function resetReduc() {
+  document.getElementById('reducName').value = 'Produit';
+  document.getElementById('reducBuy').value = '';
+  document.getElementById('reducSell').value = '';
+  document.getElementById('reducPct').value = '0';
+  document.getElementById('reducPctLabel').textContent = '0%';
+  document.getElementById('reducPctLabel').style.color = 'var(--green)';
+  document.getElementById('reducResults').innerHTML = '';
 }
 
 document.addEventListener('DOMContentLoaded', initClearButtons);
@@ -1440,7 +1531,7 @@ addGift();
 function switchOpsType(type) {
   const bar = document.getElementById('opsTypeBar');
   bar.querySelectorAll('.toggle-option').forEach((b, i) => {
-    b.classList.toggle('active', ['paliers','bogo','reduc'][i] === type);
+    b.classList.toggle('active', ['reduc','paliers','bogo'][i] === type);
   });
   document.querySelectorAll('.ops-sub').forEach(s => s.classList.remove('active'));
   document.getElementById('ops-' + type).classList.add('active');
