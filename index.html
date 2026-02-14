@@ -219,29 +219,6 @@ body {
   user-select: none;
   -webkit-user-select: none;
 }
-/* Clear btn inside efield (positioned before unit) */
-.efield .efield-clear {
-  width: 20px;
-  height: 20px;
-  border: none;
-  border-radius: 50%;
-  background: #c0c8d4;
-  color: #fff;
-  font-size: 13px;
-  line-height: 20px;
-  text-align: center;
-  cursor: pointer;
-  display: none;
-  -webkit-appearance: none;
-  appearance: none;
-  padding: 0;
-  flex-shrink: 0;
-  margin-left: 6px;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
-}
 .field-label {
   font-size: 12px;
   font-weight: 600;
@@ -685,13 +662,13 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
   <div class="divider">Résultats</div>
 
-  <div class="efield green-hl" id="fMarginEur" onclick="this.querySelector('input').focus()">
+  <div class="efield" id="fMarginEur" onclick="this.querySelector('input').focus()">
     <span class="efield-label">Marge</span>
     <input type="number" class="efield-input" id="mMarginEur" placeholder="0.00" oninput="marginFrom('marginEur')" inputmode="decimal">
     <span class="efield-unit">€</span>
   </div>
 
-  <div class="efield" id="fTauxMarge" onclick="this.querySelector('input').focus()">
+  <div class="efield" id="fTauxMarge" style="display:none;" onclick="this.querySelector('input').focus()">
     <span class="efield-label">Taux de marge</span>
     <input type="number" class="efield-input" id="mTauxMarge" placeholder="0.00" oninput="marginFrom('tauxMarge')" inputmode="decimal">
     <span class="efield-unit">%</span>
@@ -943,34 +920,13 @@ function clearField(e) {
 }
 
 function toggleClear(input) {
-  // Check in direct parent (field-input-wrap) or in efield ancestor
-  let btn = input.parentElement.querySelector('.field-clear-btn');
-  if (!btn) {
-    const efield = input.closest('.efield');
-    if (efield) btn = efield.querySelector('.efield-clear');
-  }
+  const btn = input.parentElement.querySelector('.field-clear-btn');
   if (btn) btn.style.display = input.value ? 'block' : 'none';
 }
 
 // Auto-inject clear buttons on all inputs
 function initClearButtons() {
-  // 1) efield inputs (HT/TTC, Marge) — insert button before the unit span
-  document.querySelectorAll('.efield .efield-input').forEach(input => {
-    if (input.closest('.efield').querySelector('.efield-clear')) return; // already done
-    const btn = document.createElement('button');
-    btn.className = 'efield-clear';
-    btn.textContent = '×';
-    btn.onmousedown = function(e) { e.stopPropagation(); clearField(e); };
-    const unit = input.closest('.efield').querySelector('.efield-unit');
-    if (unit) unit.before(btn);
-    else input.after(btn);
-    input.addEventListener('input', function() { toggleClear(this); });
-    input.addEventListener('focus', function() { toggleClear(this); });
-    toggleClear(input);
-  });
-
-  // 2) field-input inside field-input-wrap (already wrapped text fields) — already handled
-  // 3) field-input NOT in a wrap and NOT in special contexts (tier, discount, gift-tier)
+  // Only add clear buttons on op-product-card inputs (Opé Co pages)
   document.querySelectorAll('.op-product-card .field-input[type="number"]').forEach(input => {
     if (input.closest('.field-input-wrap')) return;
     if (input.style.textAlign === 'center') return; // tier/qty fields, skip
@@ -1049,9 +1005,9 @@ function calcReduc() {
           <div class="tier-stat-label">Prix d'achat HT</div>
           <div class="tier-stat-value">${formatEur(buy)}</div>
         </div>
-        <div class="tier-stat">
+        <div class="tier-stat" style="background:${marqueBg(marginPct)};border-radius:8px;">
           <div class="tier-stat-label">Marge €</div>
-          <div class="tier-stat-value">${formatEur(margin)}</div>
+          <div class="tier-stat-value" style="color:${marqueColor(marginPct)}">${formatEur(margin)}</div>
         </div>
         <div class="tier-stat" style="background:${marqueBg(marginPct)};border-radius:8px;">
           <div class="tier-stat-label">Taux de marque</div>
@@ -1087,14 +1043,13 @@ function calcReduc() {
 // ═══════════════════════════════
 function resetTva() {
   ['tvaHt','tvaTva','tvaTtc','tvaCustomRate'].forEach(id => { document.getElementById(id).value = ''; });
-  document.querySelectorAll('#page-tva .efield-clear').forEach(b => b.style.display = 'none');
 }
 
 function resetMargin() {
-  ['mBuy','mSell','mMarginEur','mTauxMarge','mTauxMarque','mCoeff'].forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).style.color = ''; });
-  document.getElementById('fMarginEur').className = 'efield green-hl';
+  ['mBuy','mSell','mMarginEur','mTauxMarque','mCoeff'].forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).style.color = ''; });
+  document.getElementById('fMarginEur').className = 'efield';
+  document.getElementById('fMarginEur').style.background = '';
   document.getElementById('fTauxMarque').style.background = '#F2E4E8';
-  document.querySelectorAll('#page-margin .efield-clear').forEach(b => b.style.display = 'none');
 }
 
 function resetPaliers() {
@@ -1282,10 +1237,14 @@ function marginFrom(source) {
 }
 
 function updateMarginColors(margin) {
-  const cls = margin >= 0 ? 'green-hl' : 'red-hl';
-  document.getElementById('fMarginEur').className = 'efield ' + cls;
-  // Update taux de marque color and background
   const tm = getVal('mTauxMarque');
+  // Marge € field — same rules as taux de marque
+  const margeField = document.getElementById('fMarginEur');
+  const margeInput = document.getElementById('mMarginEur');
+  margeField.style.background = marqueBg(tm);
+  margeInput.style.color = marqueColor(tm);
+  margeField.className = 'efield';
+  // Taux de marque
   const tmField = document.getElementById('fTauxMarque');
   const tmInput = document.getElementById('mTauxMarque');
   tmInput.style.color = marqueColor(tm);
@@ -1476,9 +1435,9 @@ function calcOps() {
             <div class="tier-stat-label">Coût cadeaux</div>
             <div class="tier-stat-value">${formatEur(r.totalGiftCost)}</div>
           </div>
-          <div class="tier-stat">
+          <div class="tier-stat" style="background:${marqueBg(r.marginPct)};border-radius:8px;">
             <div class="tier-stat-label">Marge €</div>
-            <div class="tier-stat-value">${formatEur(r.totalMargin)}</div>
+            <div class="tier-stat-value" style="color:${marqueColor(r.marginPct)}">${formatEur(r.totalMargin)}</div>
           </div>
           <div class="tier-stat" style="background:${marqueBg(r.marginPct)};border-radius:8px;">
             <div class="tier-stat-label">Taux de marque</div>
@@ -1612,9 +1571,9 @@ function calcBogo() {
           <div class="tier-stat-label">Coût ${freeQty} offert${freeQty > 1 ? 's' : ''}</div>
           <div class="tier-stat-value">${formatEur(costFree)}</div>
         </div>
-        <div class="tier-stat">
+        <div class="tier-stat" style="background:${marqueBg(marginPct)};border-radius:8px;">
           <div class="tier-stat-label">Marge €</div>
-          <div class="tier-stat-value">${formatEur(margin)}</div>
+          <div class="tier-stat-value" style="color:${marqueColor(marginPct)}">${formatEur(margin)}</div>
         </div>
         <div class="tier-stat" style="background:${marqueBg(marginPct)};border-radius:8px;">
           <div class="tier-stat-label">Taux de marque</div>
