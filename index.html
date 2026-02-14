@@ -169,6 +169,50 @@ body {
 }
 
 .field-group { margin-bottom: 14px; }
+.field-input-wrap {
+  position: relative;
+}
+.field-input-wrap .field-input { padding-right: 34px; }
+.field-clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: var(--border);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: system-ui;
+  z-index: 2;
+}
+/* Clear btn inside efield (positioned before unit) */
+.efield .efield-clear {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--border);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: system-ui;
+  flex-shrink: 0;
+  margin-left: 6px;
+}
 .field-label {
   font-size: 12px;
   font-weight: 600;
@@ -599,7 +643,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <div class="op-product-card" style="border-left:3px solid var(--accent);">
       <div class="field-group" style="margin-bottom:10px;">
         <div class="field-label">Nom du produit</div>
-        <input type="text" class="field-input" id="opMainName" value="Produit principal" oninput="calcOps()" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+        <div class="field-input-wrap">
+          <input type="text" class="field-input" id="opMainName" value="Produit principal" oninput="calcOps();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+          <button class="field-clear-btn" style="display:flex" onclick="clearField(this)">✕</button>
+        </div>
       </div>
       <div class="field-row">
         <div class="field-group">
@@ -641,7 +688,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <div class="op-product-card" style="border-left:3px solid var(--accent);">
       <div class="field-group" style="margin-bottom:10px;">
         <div class="field-label">Nom du produit</div>
-        <input type="text" class="field-input" id="bogoMainName" value="Produit principal" oninput="calcBogo()" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+        <div class="field-input-wrap">
+          <input type="text" class="field-input" id="bogoMainName" value="Produit principal" oninput="calcBogo();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+          <button class="field-clear-btn" style="display:flex" onclick="clearField(this)">✕</button>
+        </div>
       </div>
       <div class="field-row">
         <div class="field-group">
@@ -682,7 +732,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
       <div id="bogoOtherFields" style="display:none;">
         <div class="field-group" style="margin-bottom:10px;">
           <div class="field-label">Nom du cadeau</div>
-          <input type="text" class="field-input" id="bogoGiftName" value="Cadeau" oninput="calcBogo()" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+          <div class="field-input-wrap">
+            <input type="text" class="field-input" id="bogoGiftName" value="Cadeau" oninput="calcBogo();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+            <button class="field-clear-btn" style="display:flex" onclick="clearField(this)">✕</button>
+          </div>
         </div>
         <div class="field-group" style="margin-bottom:10px;">
           <div class="field-label">Prix achat HT du cadeau (€)</div>
@@ -734,10 +787,70 @@ function setVal(id, v) {
   const el = document.getElementById(id);
   if (document.activeElement === el) return;
   el.value = (v === 0 || isNaN(v) || !isFinite(v)) ? '' : parseFloat(v.toFixed(4));
+  toggleClear(el);
 }
 function getVal(id) {
   return parseFloat(document.getElementById(id).value) || 0;
 }
+
+function clearField(btn) {
+  const wrap = btn.closest('.field-input-wrap') || btn.closest('.efield');
+  const input = wrap.querySelector('input');
+  input.value = '';
+  btn.style.display = 'none';
+  input.focus();
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function toggleClear(input) {
+  // Check in direct parent (field-input-wrap) or in efield ancestor
+  let btn = input.parentElement.querySelector('.field-clear-btn');
+  if (!btn) {
+    const efield = input.closest('.efield');
+    if (efield) btn = efield.querySelector('.efield-clear');
+  }
+  if (btn) btn.style.display = input.value ? 'flex' : 'none';
+}
+
+// Auto-inject clear buttons on all inputs
+function initClearButtons() {
+  // 1) efield inputs (HT/TTC, Marge) — insert button before the unit span
+  document.querySelectorAll('.efield .efield-input').forEach(input => {
+    if (input.closest('.efield').querySelector('.efield-clear')) return; // already done
+    const btn = document.createElement('button');
+    btn.className = 'efield-clear';
+    btn.textContent = '✕';
+    btn.onclick = function(e) { e.stopPropagation(); clearField(this); };
+    const unit = input.closest('.efield').querySelector('.efield-unit');
+    if (unit) unit.before(btn);
+    else input.after(btn);
+    input.addEventListener('input', function() { toggleClear(this); });
+    input.addEventListener('focus', function() { toggleClear(this); });
+    toggleClear(input);
+  });
+
+  // 2) field-input inside field-input-wrap (already wrapped text fields) — already handled
+  // 3) field-input NOT in a wrap and NOT in special contexts (tier, discount, gift-tier)
+  document.querySelectorAll('.op-product-card .field-input[type="number"]').forEach(input => {
+    if (input.closest('.field-input-wrap')) return;
+    if (input.style.textAlign === 'center') return; // tier/qty fields, skip
+    const parent = input.parentElement;
+    const wrap = document.createElement('div');
+    wrap.className = 'field-input-wrap';
+    parent.insertBefore(wrap, input);
+    wrap.appendChild(input);
+    const btn = document.createElement('button');
+    btn.className = 'field-clear-btn';
+    btn.textContent = '✕';
+    btn.onclick = function(e) { e.stopPropagation(); clearField(this); };
+    wrap.appendChild(btn);
+    input.addEventListener('input', function() { toggleClear(this); });
+    input.addEventListener('focus', function() { toggleClear(this); });
+    toggleClear(input);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initClearButtons);
 
 // ═══════════════════════════════
 // CALCULATRICE
@@ -949,7 +1062,10 @@ function renderGifts() {
       <div class="field-row" style="margin-bottom:10px;">
         <div class="field-group" style="flex:2">
           <div class="field-label">Nom</div>
-          <input type="text" class="field-input" value="${g.name}" oninput="updateGift(${g.id},'name',this.value);calcOps()" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+          <div class="field-input-wrap">
+            <input type="text" class="field-input" value="${g.name}" oninput="updateGift(${g.id},'name',this.value);calcOps();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+            <button class="field-clear-btn" ${g.name ? 'style="display:flex"' : ''} onclick="clearField(this)">✕</button>
+          </div>
         </div>
         <div class="field-group" style="flex:1">
           <div class="field-label">Prix achat HT (€)</div>
