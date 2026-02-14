@@ -178,40 +178,48 @@ body {
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: #c0c8d4;
+  color: #fff;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+  z-index: 10;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* Clear btn inside efield (positioned before unit) */
+.efield .efield-clear {
   width: 20px;
   height: 20px;
   border: none;
   border-radius: 50%;
-  background: var(--border);
+  background: #c0c8d4;
   color: #fff;
-  font-size: 12px;
-  line-height: 1;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
   cursor: pointer;
   display: none;
-  align-items: center;
-  justify-content: center;
+  -webkit-appearance: none;
+  appearance: none;
   padding: 0;
-  font-family: system-ui;
-  z-index: 2;
-}
-/* Clear btn inside efield (positioned before unit) */
-.efield .efield-clear {
-  width: 18px;
-  height: 18px;
-  border: none;
-  border-radius: 50%;
-  background: var(--border);
-  color: #fff;
-  font-size: 11px;
-  line-height: 1;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  font-family: system-ui;
   flex-shrink: 0;
   margin-left: 6px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .field-label {
   font-size: 12px;
@@ -272,6 +280,9 @@ body {
   border-color: rgba(59,130,246,0.15);
 }
 .efield.highlight .efield-input { color: var(--accent2); }
+.efield.marque-hl {
+  background: #F2E4E8;
+}
 .efield.green-hl {
   background: linear-gradient(135deg, var(--surface), rgba(22,163,74,0.05));
   border-color: rgba(22,163,74,0.15);
@@ -488,6 +499,53 @@ body {
 .ops-sub { display: none; }
 .ops-sub.active { display: block; }
 
+/* ───── REDUCTION SLIDER ───── */
+.reduc-slider-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.reduc-slider-label span:first-child {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+}
+.reduc-slider-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.reduc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--green) 0%, var(--orange) 50%, var(--red) 100%);
+  outline: none;
+  margin: 4px 0 8px;
+}
+.reduc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--accent);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+.reduc-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--text2);
+  padding: 0 2px;
+}
+
 ::-webkit-scrollbar { width: 0; }
 input[type="number"] { -moz-appearance: textfield; }
 input[type="number"]::-webkit-inner-spin-button,
@@ -612,7 +670,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <span class="efield-unit">%</span>
   </div>
 
-  <div class="efield" id="fTauxMarque" onclick="this.querySelector('input').focus()">
+  <div class="efield marque-hl" id="fTauxMarque" onclick="this.querySelector('input').focus()">
     <span class="efield-label">Taux de marque</span>
     <input type="number" class="efield-input" id="mTauxMarque" placeholder="0.00" oninput="marginFrom('tauxMarque')" inputmode="decimal">
     <span class="efield-unit">%</span>
@@ -633,6 +691,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   <div class="toggle-row" id="opsTypeBar">
     <button class="toggle-option active" onclick="switchOpsType('paliers')">📊 Paliers</button>
     <button class="toggle-option" onclick="switchOpsType('bogo')">🎁 BOGO</button>
+    <button class="toggle-option" onclick="switchOpsType('reduc')">💲 Réduc</button>
   </div>
 
   <!-- ══════ SUB-PAGE: PALIERS ══════ -->
@@ -645,7 +704,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
         <div class="field-label">Nom du produit</div>
         <div class="field-input-wrap">
           <input type="text" class="field-input" id="opMainName" value="Produit principal" oninput="calcOps();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
-          <button class="field-clear-btn" style="display:flex" onclick="clearField(this)">✕</button>
+          <button class="field-clear-btn" style="display:block" onmousedown="clearField(event)">×</button>
         </div>
       </div>
       <div class="field-row">
@@ -690,7 +749,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
         <div class="field-label">Nom du produit</div>
         <div class="field-input-wrap">
           <input type="text" class="field-input" id="bogoMainName" value="Produit principal" oninput="calcBogo();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
-          <button class="field-clear-btn" style="display:flex" onclick="clearField(this)">✕</button>
+          <button class="field-clear-btn" style="display:block" onmousedown="clearField(event)">×</button>
         </div>
       </div>
       <div class="field-row">
@@ -734,7 +793,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
           <div class="field-label">Nom du cadeau</div>
           <div class="field-input-wrap">
             <input type="text" class="field-input" id="bogoGiftName" value="Cadeau" oninput="calcBogo();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
-            <button class="field-clear-btn" style="display:flex" onclick="clearField(this)">✕</button>
+            <button class="field-clear-btn" style="display:block" onmousedown="clearField(event)">×</button>
           </div>
         </div>
         <div class="field-group" style="margin-bottom:10px;">
@@ -753,6 +812,46 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     </div>
 
     <div id="bogoResults"></div>
+  </div>
+
+  <!-- ══════ SUB-PAGE: RÉDUCTION ══════ -->
+  <div id="ops-reduc" class="ops-sub">
+    <div class="section-subtitle">Réduction en % sur un produit</div>
+
+    <div class="op-section-label">🏷️ Produit</div>
+    <div class="op-product-card" style="border-left:3px solid var(--accent);">
+      <div class="field-group" style="margin-bottom:10px;">
+        <div class="field-label">Nom du produit</div>
+        <div class="field-input-wrap">
+          <input type="text" class="field-input" id="reducName" value="Produit" oninput="calcReduc();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
+          <button class="field-clear-btn" style="display:block" onmousedown="clearField(event)">×</button>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Prix achat HT (€)</div>
+          <input type="number" class="field-input" id="reducBuy" placeholder="0.00" oninput="calcReduc()" inputmode="decimal">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Prix vente HT (€)</div>
+          <input type="number" class="field-input" id="reducSell" placeholder="0.00" oninput="calcReduc()" inputmode="decimal">
+        </div>
+      </div>
+    </div>
+
+    <div class="op-section-label">💲 Réduction</div>
+    <div class="op-product-card">
+      <div class="reduc-slider-label">
+        <span>Réduction appliquée</span>
+        <span class="reduc-slider-value" id="reducPctLabel">0%</span>
+      </div>
+      <input type="range" class="reduc-slider" id="reducPct" min="0" max="70" step="5" value="0" oninput="calcReduc()">
+      <div class="reduc-slider-ticks">
+        <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span><span>60%</span><span>70%</span>
+      </div>
+    </div>
+
+    <div id="reducResults"></div>
   </div>
 </div>
 
@@ -781,6 +880,8 @@ function formatEur(n) {
 function formatPct(n) {
   return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' %';
 }
+function marqueColor(pct) { return pct >= 70 ? 'var(--green)' : 'var(--red)'; }
+function marqueBg(pct) { return pct >= 70 ? '#E4F2E8' : '#F2E4E8'; }
 
 // Set value only if the field is NOT currently focused (user is not typing in it)
 function setVal(id, v) {
@@ -793,7 +894,10 @@ function getVal(id) {
   return parseFloat(document.getElementById(id).value) || 0;
 }
 
-function clearField(btn) {
+function clearField(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const btn = e.currentTarget;
   const wrap = btn.closest('.field-input-wrap') || btn.closest('.efield');
   const input = wrap.querySelector('input');
   input.value = '';
@@ -809,7 +913,7 @@ function toggleClear(input) {
     const efield = input.closest('.efield');
     if (efield) btn = efield.querySelector('.efield-clear');
   }
-  if (btn) btn.style.display = input.value ? 'flex' : 'none';
+  if (btn) btn.style.display = input.value ? 'block' : 'none';
 }
 
 // Auto-inject clear buttons on all inputs
@@ -819,8 +923,8 @@ function initClearButtons() {
     if (input.closest('.efield').querySelector('.efield-clear')) return; // already done
     const btn = document.createElement('button');
     btn.className = 'efield-clear';
-    btn.textContent = '✕';
-    btn.onclick = function(e) { e.stopPropagation(); clearField(this); };
+    btn.textContent = '×';
+    btn.onmousedown = function(e) { e.stopPropagation(); clearField(e); };
     const unit = input.closest('.efield').querySelector('.efield-unit');
     if (unit) unit.before(btn);
     else input.after(btn);
@@ -841,13 +945,105 @@ function initClearButtons() {
     wrap.appendChild(input);
     const btn = document.createElement('button');
     btn.className = 'field-clear-btn';
-    btn.textContent = '✕';
-    btn.onclick = function(e) { e.stopPropagation(); clearField(this); };
+    btn.textContent = '×';
+    btn.onmousedown = function(e) { e.stopPropagation(); clearField(e); };
     wrap.appendChild(btn);
     input.addEventListener('input', function() { toggleClear(this); });
     input.addEventListener('focus', function() { toggleClear(this); });
     toggleClear(input);
   });
+}
+
+// ═══════════════════════════════
+// RÉDUCTION %
+// ═══════════════════════════════
+function calcReduc() {
+  const name = document.getElementById('reducName').value || 'Produit';
+  const buy = parseFloat(document.getElementById('reducBuy').value) || 0;
+  const sell = parseFloat(document.getElementById('reducSell').value) || 0;
+  const pct = parseInt(document.getElementById('reducPct').value) || 0;
+
+  // Update label
+  document.getElementById('reducPctLabel').textContent = pct + '%';
+  
+  // Color the label based on % level
+  const label = document.getElementById('reducPctLabel');
+  if (pct <= 15) label.style.color = 'var(--green)';
+  else if (pct <= 35) label.style.color = 'var(--orange)';
+  else label.style.color = 'var(--red)';
+
+  if (buy === 0 && sell === 0) {
+    document.getElementById('reducResults').innerHTML = '';
+    return;
+  }
+
+  const reducedSell = sell * (1 - pct / 100);
+  const margin = reducedSell - buy;
+  const marginPct = reducedSell > 0 ? (margin / reducedSell) * 100 : 0;
+  const mc = margin >= 0 ? 'green' : 'red';
+
+  // Sans promo
+  const marginNoPromo = sell - buy;
+  const marginPctNoPromo = sell > 0 ? (marginNoPromo / sell) * 100 : 0;
+
+  // Montant de la remise
+  const discountAmount = sell * pct / 100;
+
+  let html = `
+    <div class="divider" style="margin-top:4px;">Résultat — Réduction ${pct}%</div>
+
+    <div class="tier-result-card">
+      <div class="tier-result-title">
+        ${name} à -${pct}%
+      </div>
+      <div class="tier-grid">
+        <div class="tier-stat">
+          <div class="tier-stat-label">Prix initial HT</div>
+          <div class="tier-stat-value">${formatEur(sell)}</div>
+        </div>
+        <div class="tier-stat">
+          <div class="tier-stat-label">Remise (-${pct}%)</div>
+          <div class="tier-stat-value">${formatEur(discountAmount)}</div>
+        </div>
+        <div class="tier-stat">
+          <div class="tier-stat-label">Prix remisé HT</div>
+          <div class="tier-stat-value">${formatEur(reducedSell)}</div>
+        </div>
+        <div class="tier-stat">
+          <div class="tier-stat-label">Prix d'achat HT</div>
+          <div class="tier-stat-value">${formatEur(buy)}</div>
+        </div>
+        <div class="tier-stat">
+          <div class="tier-stat-label">Marge €</div>
+          <div class="tier-stat-value">${formatEur(margin)}</div>
+        </div>
+        <div class="tier-stat" style="background:${marqueBg(marginPct)};border-radius:8px;">
+          <div class="tier-stat-label">Taux de marque</div>
+          <div class="tier-stat-value" style="color:${marqueColor(marginPct)}">${formatPct(marginPct)}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparaison -->
+    <div class="op-product-card" style="border-left:3px solid var(--text2);margin-top:10px;">
+      <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">📊 Comparaison sans promo</div>
+      <div class="field-row">
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text2);">Marge sans promo</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:${marqueColor(marginPctNoPromo)};">${formatPct(marginPctNoPromo)}</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text2);">Marge avec -${pct}%</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:${marqueColor(marginPct)};">${formatPct(marginPct)}</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:10px;color:var(--text2);">Perte / unité</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;">${formatEur(discountAmount)}</div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('reducResults').innerHTML = html;
 }
 
 document.addEventListener('DOMContentLoaded', initClearButtons);
@@ -997,6 +1193,12 @@ function marginFrom(source) {
 function updateMarginColors(margin) {
   const cls = margin >= 0 ? 'green-hl' : 'red-hl';
   document.getElementById('fMarginEur').className = 'efield ' + cls;
+  // Update taux de marque color and background
+  const tm = getVal('mTauxMarque');
+  const tmField = document.getElementById('fTauxMarque');
+  const tmInput = document.getElementById('mTauxMarque');
+  tmInput.style.color = marqueColor(tm);
+  tmField.style.background = marqueBg(tm);
 }
 
 // ═══════════════════════════════
@@ -1064,7 +1266,7 @@ function renderGifts() {
           <div class="field-label">Nom</div>
           <div class="field-input-wrap">
             <input type="text" class="field-input" value="${g.name}" oninput="updateGift(${g.id},'name',this.value);calcOps();toggleClear(this)" style="font-family:'DM Sans',sans-serif;font-size:14px;">
-            <button class="field-clear-btn" ${g.name ? 'style="display:flex"' : ''} onclick="clearField(this)">✕</button>
+            <button class="field-clear-btn" ${g.name ? 'style="display:block"' : ''} onmousedown="clearField(event)">×</button>
           </div>
         </div>
         <div class="field-group" style="flex:1">
@@ -1177,19 +1379,19 @@ function calcOps() {
           ${r.disc > 0 ? `
           <div class="tier-stat">
             <div class="tier-stat-label">Remise accordée</div>
-            <div class="tier-stat-value" style="color:var(--red)">-${formatEur(r.discountAmount)}</div>
+            <div class="tier-stat-value">${formatEur(r.discountAmount)}</div>
           </div>` : ''}
           <div class="tier-stat">
             <div class="tier-stat-label">Coût cadeaux</div>
-            <div class="tier-stat-value" style="color:var(--orange)">${formatEur(r.totalGiftCost)}</div>
+            <div class="tier-stat-value">${formatEur(r.totalGiftCost)}</div>
           </div>
           <div class="tier-stat">
             <div class="tier-stat-label">Marge €</div>
-            <div class="tier-stat-value" style="color:var(--${mc})">${formatEur(r.totalMargin)}</div>
+            <div class="tier-stat-value">${formatEur(r.totalMargin)}</div>
           </div>
-          <div class="tier-stat">
+          <div class="tier-stat" style="background:${marqueBg(r.marginPct)};border-radius:8px;">
             <div class="tier-stat-label">Taux de marque</div>
-            <div class="tier-stat-value" style="color:var(--${mc})">${formatPct(r.marginPct)}</div>
+            <div class="tier-stat-value" style="color:${marqueColor(r.marginPct)}">${formatPct(r.marginPct)}</div>
           </div>
         </div>
         ${r.disc > 0 || r.giftDetails.length > 0 ? `
@@ -1238,7 +1440,7 @@ addGift();
 function switchOpsType(type) {
   const bar = document.getElementById('opsTypeBar');
   bar.querySelectorAll('.toggle-option').forEach((b, i) => {
-    b.classList.toggle('active', ['paliers','bogo'][i] === type);
+    b.classList.toggle('active', ['paliers','bogo','reduc'][i] === type);
   });
   document.querySelectorAll('.ops-sub').forEach(s => s.classList.remove('active'));
   document.getElementById('ops-' + type).classList.add('active');
@@ -1317,15 +1519,15 @@ function calcBogo() {
         </div>
         <div class="tier-stat">
           <div class="tier-stat-label">Coût ${freeQty} offert${freeQty > 1 ? 's' : ''}</div>
-          <div class="tier-stat-value" style="color:var(--orange)">${formatEur(costFree)}</div>
+          <div class="tier-stat-value">${formatEur(costFree)}</div>
         </div>
         <div class="tier-stat">
           <div class="tier-stat-label">Marge €</div>
-          <div class="tier-stat-value" style="color:var(--${mc})">${formatEur(margin)}</div>
+          <div class="tier-stat-value">${formatEur(margin)}</div>
         </div>
-        <div class="tier-stat">
+        <div class="tier-stat" style="background:${marqueBg(marginPct)};border-radius:8px;">
           <div class="tier-stat-label">Taux de marque</div>
-          <div class="tier-stat-value" style="color:var(--${mc})">${formatPct(marginPct)}</div>
+          <div class="tier-stat-value" style="color:${marqueColor(marginPct)}">${formatPct(marginPct)}</div>
         </div>
         <div class="tier-stat">
           <div class="tier-stat-label">P.V. effectif / unité</div>
@@ -1371,15 +1573,15 @@ function calcBogo() {
       <div class="field-row">
         <div style="flex:1;text-align:center;">
           <div style="font-size:10px;color:var(--text2);">Marge sans promo</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--green);">${formatPct(marginPctNoPromo)}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:${marqueColor(marginPctNoPromo)};">${formatPct(marginPctNoPromo)}</div>
         </div>
         <div style="flex:1;text-align:center;">
           <div style="font-size:10px;color:var(--text2);">Marge avec promo</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--${mc});">${formatPct(marginPct)}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:${marqueColor(marginPct)};">${formatPct(marginPct)}</div>
         </div>
         <div style="flex:1;text-align:center;">
           <div style="font-size:10px;color:var(--text2);">Coût de l'offre</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--red);">-${formatEur(marginLoss)}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;">${formatEur(marginLoss)}</div>
         </div>
       </div>
     </div>`;
