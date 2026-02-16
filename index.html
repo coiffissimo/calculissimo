@@ -558,6 +558,10 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><circle cx="8" cy="12" r="0.8" fill="currentColor"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/><circle cx="16" cy="12" r="0.8" fill="currentColor"/><circle cx="8" cy="16" r="0.8" fill="currentColor"/><circle cx="12" cy="16" r="0.8" fill="currentColor"/><circle cx="16" cy="16" r="0.8" fill="currentColor"/></svg>
     Calcul
   </button>
+  <button class="tab-btn" onclick="switchTab('evol')">
+    <span style="font-size:18px;font-weight:700;line-height:20px;">%</span>
+    Évol
+  </button>
   <button class="tab-btn" onclick="switchTab('tva')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
     HT/TTC
@@ -599,6 +603,38 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
     <button class="calc-btn num" onclick="calcInput('0')">0</button>
     <button class="calc-btn num" onclick="calcInput('.')">.</button>
     <button class="calc-btn op" onclick="calcInput('+')">+</button>
+  </div>
+</div>
+
+<!-- ═══════ PAGE: % ÉVOLUTION ═══════ -->
+<div id="page-evol" class="page">
+  <div class="section-header">
+    <div class="section-title">% Évolution</div>
+    <button class="reset-link" onclick="resetEvol()">↺ Réinitialiser</button>
+  </div>
+
+  <div class="efield" onclick="this.querySelector('input').focus()">
+    <span class="efield-label">Valeur initiale</span>
+    <input type="number" class="efield-input" id="evolV1" placeholder="0.00" oninput="calcEvol()" inputmode="decimal">
+  </div>
+
+  <div class="efield" onclick="this.querySelector('input').focus()">
+    <span class="efield-label">Valeur finale</span>
+    <input type="number" class="efield-input" id="evolV2" placeholder="0.00" oninput="calcEvol()" inputmode="decimal">
+  </div>
+
+  <div class="divider">Résultat</div>
+
+  <div class="efield" id="fEvolPct" style="background:#F2E4E8;">
+    <span class="efield-label">Évolution</span>
+    <span class="efield-input" id="evolResult" style="font-weight:700;">—</span>
+    <span class="efield-unit">%</span>
+  </div>
+
+  <div class="efield" id="fEvolDiff">
+    <span class="efield-label">Écart</span>
+    <span class="efield-input" id="evolDiff" style="font-weight:700;">—</span>
+    <span class="efield-unit">€</span>
   </div>
 </div>
 
@@ -874,7 +910,7 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 // ═══════════════════════════════
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    b.classList.toggle('active', ['calc','tva','margin','ops'][i] === tab);
+    b.classList.toggle('active', ['calc','evol','tva','margin','ops'][i] === tab);
   });
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
@@ -1090,6 +1126,50 @@ function resetReduc() {
   document.getElementById('reducPctLabel').textContent = '0%';
   document.getElementById('reducPctLabel').style.color = 'var(--green)';
   document.getElementById('reducResults').innerHTML = '';
+}
+
+// ═══════════════════════════════
+// % ÉVOLUTION
+// ═══════════════════════════════
+function calcEvol() {
+  const v1 = parseFloat(document.getElementById('evolV1').value);
+  const v2 = parseFloat(document.getElementById('evolV2').value);
+  const resultEl = document.getElementById('evolResult');
+  const diffEl = document.getElementById('evolDiff');
+  const pctField = document.getElementById('fEvolPct');
+
+  if (isNaN(v1) || isNaN(v2) || v1 === 0) {
+    resultEl.textContent = '—';
+    resultEl.style.color = '';
+    diffEl.textContent = '—';
+    pctField.style.background = '#F2E4E8';
+    return;
+  }
+
+  const pct = ((v2 - v1) / Math.abs(v1)) * 100;
+  const diff = v2 - v1;
+  const isPositive = pct >= 0;
+  const color = isPositive ? 'var(--green)' : 'var(--red)';
+  const bg = isPositive ? '#E4F2E8' : '#F2E4E8';
+
+  resultEl.textContent = (isPositive ? '+' : '') + pct.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  resultEl.style.color = color;
+  pctField.style.background = bg;
+
+  diffEl.textContent = (diff >= 0 ? '+' : '') + diff.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  diffEl.style.color = color;
+  document.getElementById('fEvolDiff').style.background = bg;
+}
+
+function resetEvol() {
+  document.getElementById('evolV1').value = '';
+  document.getElementById('evolV2').value = '';
+  document.getElementById('evolResult').textContent = '—';
+  document.getElementById('evolResult').style.color = '';
+  document.getElementById('evolDiff').textContent = '—';
+  document.getElementById('evolDiff').style.color = '';
+  document.getElementById('fEvolPct').style.background = '#F2E4E8';
+  document.getElementById('fEvolDiff').style.background = '';
 }
 
 document.addEventListener('DOMContentLoaded', initClearButtons);
