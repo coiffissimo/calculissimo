@@ -144,15 +144,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 54px;
+  aspect-ratio: 1;
   user-select: none;
 }
 .calc-btn:active { transform: scale(0.94); opacity: 0.8; }
 .calc-btn.num { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 .calc-btn.op { background: var(--surface2); color: var(--accent2); }
 .calc-btn.fn { background: rgba(59,130,246,0.12); color: var(--accent2); font-size: 14px; }
-.calc-btn.eq { background: var(--accent); color: #fff; }
+.calc-btn.eq { background: var(--accent); color: #fff; grid-column: span 4; aspect-ratio: auto; min-height: 48px; }
 .calc-btn.clear { background: rgba(239,68,68,0.1); color: var(--red); font-size: 15px; }
+.calc-btn.back { background: rgba(239,68,68,0.1); color: var(--red); font-size: 18px; }
 
 /* ───── SHARED FORM STYLES ───── */
 .section-title {
@@ -580,24 +581,25 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
   </div>
   <div class="calc-grid">
     <button class="calc-btn clear" onclick="calcClear()">AC</button>
+    <button class="calc-btn back" onclick="calcBack()">⌫</button>
     <button class="calc-btn fn" onclick="calcInput('(')">(</button>
     <button class="calc-btn fn" onclick="calcInput(')')">)</button>
-    <button class="calc-btn op" onclick="calcInput('÷')">÷</button>
     <button class="calc-btn num" onclick="calcInput('7')">7</button>
     <button class="calc-btn num" onclick="calcInput('8')">8</button>
     <button class="calc-btn num" onclick="calcInput('9')">9</button>
-    <button class="calc-btn op" onclick="calcInput('×')">×</button>
+    <button class="calc-btn op" onclick="calcInput('÷')">÷</button>
     <button class="calc-btn num" onclick="calcInput('4')">4</button>
     <button class="calc-btn num" onclick="calcInput('5')">5</button>
     <button class="calc-btn num" onclick="calcInput('6')">6</button>
-    <button class="calc-btn op" onclick="calcInput('-')">−</button>
+    <button class="calc-btn op" onclick="calcInput('×')">×</button>
     <button class="calc-btn num" onclick="calcInput('1')">1</button>
     <button class="calc-btn num" onclick="calcInput('2')">2</button>
     <button class="calc-btn num" onclick="calcInput('3')">3</button>
-    <button class="calc-btn op" onclick="calcInput('+')">+</button>
+    <button class="calc-btn op" onclick="calcInput('-')">−</button>
     <button class="calc-btn fn" onclick="calcPercent()">%</button>
     <button class="calc-btn num" onclick="calcInput('0')">0</button>
     <button class="calc-btn num" onclick="calcInput('.')">.</button>
+    <button class="calc-btn op" onclick="calcInput('+')">+</button>
     <button class="calc-btn eq" onclick="calcEquals()">=</button>
   </div>
 </div>
@@ -1111,6 +1113,13 @@ function calcClear() {
   calcStr = ''; calcHasResult = false;
   document.getElementById('calcExpr').textContent = '';
   document.getElementById('calcResult').textContent = '0';
+}
+function calcBack() {
+  if (calcHasResult) return;
+  calcStr = calcStr.slice(0, -1);
+  document.getElementById('calcExpr').textContent = calcStr;
+  if (calcStr) tryLiveEval();
+  else document.getElementById('calcResult').textContent = '0';
 }
 function calcPercent() { calcStr += '%'; document.getElementById('calcExpr').textContent = calcStr; }
 function tryLiveEval() {
